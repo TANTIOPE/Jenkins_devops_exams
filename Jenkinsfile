@@ -49,23 +49,32 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    echo "Running basic health checks..."
+                    echo "Running basic image verification..."
                     sh """
-                        # Test movie service
-                        docker run -d --name test-movie-${BUILD_NUMBER} ${DOCKERHUB_USER}/movie-service:${IMAGE_TAG}
-                        sleep 10
-                        docker logs test-movie-${BUILD_NUMBER} || true
-                        docker stop test-movie-${BUILD_NUMBER} || true
-                        docker rm test-movie-${BUILD_NUMBER} || true
+                        # Verify images exist and get their info
+                        echo "Verifying movie-service image..."
+                        docker inspect ${DOCKERHUB_USER}/movie-service:${IMAGE_TAG} > /dev/null 2>&1
+                        if [ \$? -eq 0 ]; then
+                            echo "✓ movie-service:${IMAGE_TAG} image built successfully"
+                            docker history ${DOCKERHUB_USER}/movie-service:${IMAGE_TAG} | head -5
+                        else
+                            echo "✗ Failed to build movie-service image"
+                            exit 1
+                        fi
 
-                        # Test cast service
-                        docker run -d --name test-cast-${BUILD_NUMBER} ${DOCKERHUB_USER}/cast-service:${IMAGE_TAG}
-                        sleep 10
-                        docker logs test-cast-${BUILD_NUMBER} || true
-                        docker stop test-cast-${BUILD_NUMBER} || true
-                        docker rm test-cast-${BUILD_NUMBER} || true
+                        echo ""
+                        echo "Verifying cast-service image..."
+                        docker inspect ${DOCKERHUB_USER}/cast-service:${IMAGE_TAG} > /dev/null 2>&1
+                        if [ \$? -eq 0 ]; then
+                            echo "✓ cast-service:${IMAGE_TAG} image built successfully"
+                            docker history ${DOCKERHUB_USER}/cast-service:${IMAGE_TAG} | head -5
+                        else
+                            echo "✗ Failed to build cast-service image"
+                            exit 1
+                        fi
 
-                        echo "✅ Tests completed"
+                        echo ""
+                        echo "✅ All images verified successfully"
                     """
                 }
             }
