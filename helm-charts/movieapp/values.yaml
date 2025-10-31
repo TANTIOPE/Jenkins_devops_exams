@@ -1,0 +1,98 @@
+# Default values for movieapp
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+environment: dev
+namespace: dev
+
+# Movie Service Configuration
+movieService:
+  enabled: true
+  name: movie-service
+  replicaCount: 1
+  image:
+    repository: taantiope/movie-service
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  env:
+    DATABASE_URI: "postgresql://movie_db_username:movie_db_password@movieapp-moviedb:5432/movie_db_dev"
+    CAST_SERVICE_HOST_URL: "http://cast-service:8000/api/v1/casts/"
+
+# Cast Service Configuration
+castService:
+  enabled: true
+  name: cast-service
+  replicaCount: 1
+  image:
+    repository: taantiope/cast-service
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  env:
+    DATABASE_URI: "postgresql://cast_db_username:cast_db_password@movieapp-castdb:5432/cast_db_dev"
+
+# Nginx Configuration
+nginx:
+  enabled: true
+  name: nginx
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+# Movie Database (PostgreSQL)
+moviedb:
+  enabled: true
+  auth:
+    username: movie_db_username
+    password: movie_db_password
+    database: movie_db_dev
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+
+# Cast Database (PostgreSQL)
+castdb:
+  enabled: true
+  auth:
+    username: cast_db_username
+    password: cast_db_password
+    database: cast_db_dev
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi

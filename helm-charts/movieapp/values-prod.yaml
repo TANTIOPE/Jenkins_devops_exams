@@ -1,0 +1,33 @@
+# Production environment values
+environment: prod
+namespace: prod
+
+movieService:
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 500m
+      memory: 768Mi
+    requests:
+      cpu: 250m
+      memory: 384Mi
+
+castService:
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 500m
+      memory: 768Mi
+    requests:
+      cpu: 250m
+      memory: 384Mi
+
+nginx:
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

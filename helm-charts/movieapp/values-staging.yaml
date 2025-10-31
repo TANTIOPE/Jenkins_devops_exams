@@ -1,0 +1,26 @@
+# Staging environment values
+environment: staging
+namespace: staging
+
+movieService:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+castService:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+nginx:
+  replicaCount: 2

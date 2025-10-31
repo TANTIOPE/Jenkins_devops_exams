@@ -1,0 +1,36 @@
+{{- if .Values.movieService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.movieService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.movieService.name }}
+    environment: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.movieService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.movieService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.movieService.name }}
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+      - name: {{ .Values.movieService.name }}
+        image: "{{ .Values.movieService.image.repository }}:{{ .Values.movieService.image.tag }}"
+        imagePullPolicy: {{ .Values.movieService.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.movieService.service.targetPort }}
+          name: http
+        env:
+        - name: DATABASE_URI
+          value: {{ .Values.movieService.env.DATABASE_URI | quote }}
+        - name: CAST_SERVICE_HOST_URL
+          value: {{ .Values.movieService.env.CAST_SERVICE_HOST_URL | quote }}
+        resources:
+          {{- toYaml .Values.movieService.resources | nindent 10 }}
+        command: ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+{{- end }}

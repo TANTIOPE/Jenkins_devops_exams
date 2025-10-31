@@ -1,0 +1,18 @@
+{{- if .Values.movieService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.movieService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.movieService.name }}
+spec:
+  type: {{ .Values.movieService.service.type }}
+  ports:
+  - port: {{ .Values.movieService.service.port }}
+    targetPort: {{ .Values.movieService.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ .Values.movieService.name }}
+{{- end }}

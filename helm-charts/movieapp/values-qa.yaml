@@ -1,0 +1,26 @@
+# QA environment values
+environment: qa
+namespace: qa
+
+movieService:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 300m
+      memory: 384Mi
+    requests:
+      cpu: 150m
+      memory: 192Mi
+
+castService:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 300m
+      memory: 384Mi
+    requests:
+      cpu: 150m
+      memory: 192Mi
+
+nginx:
+  replicaCount: 2

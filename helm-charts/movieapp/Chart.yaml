@@ -1,0 +1,22 @@
+apiVersion: v2
+name: movieapp
+description: Movie microservices application with cast and movie services
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+maintainers:
+  - name: Tristan ANTIOPE
+    email: tristan@example.com
+
+dependencies:
+  - name: postgresql
+    version: "12.1.2"
+    repository: "https://charts.bitnami.com/bitnami"
+    alias: moviedb
+    condition: moviedb.enabled
+  - name: postgresql
+    version: "12.1.2"
+    repository: "https://charts.bitnami.com/bitnami"
+    alias: castdb
+    condition: castdb.enabled

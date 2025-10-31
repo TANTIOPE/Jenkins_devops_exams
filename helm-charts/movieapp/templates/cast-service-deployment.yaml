@@ -1,0 +1,34 @@
+{{- if .Values.castService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.castService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.castService.name }}
+    environment: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.castService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.castService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.castService.name }}
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+      - name: {{ .Values.castService.name }}
+        image: "{{ .Values.castService.image.repository }}:{{ .Values.castService.image.tag }}"
+        imagePullPolicy: {{ .Values.castService.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.castService.service.targetPort }}
+          name: http
+        env:
+        - name: DATABASE_URI
+          value: {{ .Values.castService.env.DATABASE_URI | quote }}
+        resources:
+          {{- toYaml .Values.castService.resources | nindent 10 }}
+        command: ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+{{- end }}
