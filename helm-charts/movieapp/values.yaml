@@ -59,7 +59,7 @@ nginx:
   replicaCount: 1
   image:
     repository: nginx
-    tag: latest
+    tag: 1.25-alpine
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
