@@ -11,12 +11,12 @@ maintainers:
 
 dependencies:
   - name: postgresql
-    version: "12.1.2"
+    version: "18.0.15"
     repository: "https://charts.bitnami.com/bitnami"
     alias: moviedb
     condition: moviedb.enabled
   - name: postgresql
-    version: "12.1.2"
+    version: "18.0.15"
     repository: "https://charts.bitnami.com/bitnami"
     alias: castdb
     condition: castdb.enabled
